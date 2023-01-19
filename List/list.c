@@ -13,7 +13,7 @@ static Node* Node_create(const void* data) {
 
 /* ================================================================ */
 
-extern List* List_create(void) {
+List* List_create(void) {
     List* list = NULL;
 
     if ((list = (List*) malloc(sizeof(List))) == NULL) {
@@ -25,7 +25,7 @@ extern List* List_create(void) {
 
 /* ================================================================ */
 
-extern void List_init(List* list, void (*destroy)(void* data), int (*match)(const void* key_1, const void* key_2)) {
+void List_init(List* list, void (*destroy)(void* data), int (*match)(const void* key_1, const void* key_2)) {
     if ((list != NULL)) { /* Update the function to return a meaningful value */
         list->destroy = destroy;
         list->match = match;
@@ -71,7 +71,7 @@ void List_print(const List* list, void (*print)(const void* data), char* sep) {
 
 /* ================================================================ */
 
-extern int List_insert_first(List* list, const void* data) {
+int List_insert_first(List* list, const void* data) {
     int result = EXIT_FAILURE;
     Node* node = NULL;
 
@@ -155,7 +155,7 @@ void* List_remove_first(List* list) {
 
 /* ================================================================ */
 
-extern void* List_remove_last(List* list) {
+void* List_remove_last(List* list) {
     void* data;
     Node* node = NULL;
     Node* temp = NULL;
@@ -291,7 +291,7 @@ void List_clear(List* list) {
 int List_load_array(List* list, ssize_t size, ssize_t elm_size, void* array) {
     int result = EXIT_FAILURE;
 
-    if ((list != NULL) && (array != NULL)) {
+    if ((array != NULL)) {
         if ((size > 0) && (elm_size > 0)) {
             for (size_t i = 0; i < size; i++) {
                 if (List_insert_last(list, (array + i * elm_size)) == EXIT_FAILURE) {
