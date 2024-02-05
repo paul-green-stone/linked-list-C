@@ -81,7 +81,7 @@ static void* Node_destroy(sNode_t* node) {
 
 /* ================================================================ */
 
-sList_t sList_new(void (*destroy)(void* data), void (*print)(void* data)) {
+sList_t sList_new(void (*destroy)(void* data), void (*print)(void* data), int (*match)(void* data_1, void* data_2)) {
 
     sList_t list = NULL;
 
@@ -99,6 +99,7 @@ sList_t sList_new(void (*destroy)(void* data), void (*print)(void* data)) {
 
     list->methods->destroy = destroy;
     list->methods->print = print;
+    list->methods->match = match;
 
     return list;
 }
@@ -135,7 +136,7 @@ void sList_destroy(sList_t* list) {
 
 int sList_insert_last(const sList_t list, void* data) {
 
-    int result = 0;
+    int result = 1;
     sNode_t node = NULL;
 
     if (list == NULL) {
@@ -156,7 +157,7 @@ int sList_insert_last(const sList_t list, void* data) {
 
     list->data->size++;
 
-    return (result = 1);
+    return (result = 0);
 }
 
 /* ================================ */
@@ -188,6 +189,7 @@ void* sList_remove_last(const sList_t list) {
             for (temp = list->data->head; temp->next != list->data->tail; temp = temp->next) ;
 
             list->data->tail = temp;
+            list->data->tail->next = NULL;
         }
 
         Node_destroy(&node);
@@ -243,7 +245,7 @@ extern void sList_print(const sList_t list) {
 
 int sList_insert_first(const sList_t list, void* data) {
 
-    int result = 0;
+    int result = 1;
     sNode_t node = NULL;
 
     if (list == NULL) {
@@ -264,7 +266,7 @@ int sList_insert_first(const sList_t list, void* data) {
 
     list->data->size++;
 
-    return (result = 1);
+    return (result = 0);
 }
 
 /* ================================ */
@@ -300,6 +302,175 @@ void* sList_remove_first(const sList_t list) {
     }
 
     return data;
+}
+
+/* ================================ */
+
+sNode_t sList_find(const sList_t list, void* data) {
+
+    sNode_t temp = NULL;
+
+    if (list == NULL) {
+        return temp;
+    }
+
+    if (list->methods->match == NULL) {
+        return temp;
+    }
+
+    if (data == NULL) {
+        return temp;
+    }
+
+    for (temp = list->data->head; temp != NULL; temp = temp->next) {
+
+        if (list->methods->match(temp->data, data) == 0) {
+            return temp;
+        }
+    }
+
+    return temp;
+}
+
+/* ================================ */
+
+int sList_insert_after(const sList_t list, const sNode_t node, void* data) {
+
+    sNode_t new_node = NULL;
+    sNode_t temp = NULL;
+
+    int result = 1;
+
+    if (list == NULL) {
+        return result;
+    }
+
+    if ((node == NULL) || (node == list->data->tail)) {
+        return sList_insert_last(list, data);
+    }
+
+    if ((new_node = Node_new(data)) == NULL) {
+        return result;
+    }
+
+    for (temp = list->data->head; temp != node && temp != NULL; temp = temp->next) ;
+
+    if (temp == NULL) {
+        return result;
+    }
+
+    new_node->next = temp->next;
+    temp->next = new_node;
+
+    list->data->size++;
+
+    return (result = 0);
+}
+
+/* ================================ */
+
+int sList_insert_before(const sList_t list, const sNode_t node, void* data) {
+
+    sNode_t new_node = NULL;
+    sNode_t temp = NULL;
+
+    int result = 1;
+
+    if (list == NULL) {
+        return result;
+    }
+
+    if ((node == NULL) || (node == list->data->head)) {
+        return sList_insert_first(list, data);
+    }
+
+    if ((new_node = Node_new(data)) == NULL) {
+        return result;
+    }
+
+    for (temp = list->data->head; temp->next != node && temp != NULL; temp = temp->next) ;
+
+    if (temp == NULL) {
+        return result;
+    }
+
+    new_node->next = temp->next;
+    temp->next = new_node;
+
+    list->data->size++;
+
+    return (result = 0);
+}
+
+/* ================================ */
+
+void* sList_delete_Node(const sList_t list, sNode_t node) {
+
+    sNode_t temp = NULL;
+
+    void* data = NULL;
+
+    if (list == NULL) {
+        return data;
+    }
+
+    if (node == NULL) {
+        return data;
+    }
+
+    if (node == list->data->head) {
+        return sList_remove_first(list);
+    }
+
+    if (node == list->data->tail) {
+        return sList_remove_last(list);
+    }
+
+    for (temp = list->data->head; temp->next != node && temp != NULL; temp = temp->next) ;
+
+    if (temp == NULL) {
+        return data;
+    }
+
+    temp->next = node->next;
+
+    data = Node_destroy(&node);
+
+    list->data->size--;
+
+    return data;
+}
+
+/* ================================ */
+
+void sList_print_verbose(const sList_t list) {
+
+    sNode_t node = NULL;
+
+    if (list == NULL) {
+        return ;
+    }
+
+    if (list->methods->print == NULL) {
+        return ;
+    }
+
+    for (node = list->data->head; node != NULL; node = node->next) {
+
+        printf("[");
+        printf("data: ");
+        list->methods->print(node->data);
+        printf("\n");
+
+        printf("next: %p\n", (void*) node->next);
+        printf("]");
+
+        if (node != list->data->tail) {
+            printf("\n");
+        }
+    }
+
+    return ;
 }
 
 /* ================================================================ */
