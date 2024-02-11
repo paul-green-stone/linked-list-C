@@ -8,6 +8,15 @@ void print_int(void* data) {
     return ;
 }
 
+int sqr(void* data) {
+
+    int result = 0;
+
+    *((int*) data) = *((int*) data) * *((int*) data);
+
+    return result;
+}
+
 int match_int(void* data_1, void* data_2) {
     
     if ((data_1 == NULL) || (data_2 == NULL)) {
@@ -48,6 +57,8 @@ int main (int argc, char** argv) {
 
     int a = 10;
     sNode_t node = sList_find(list, &a);
+
+    sList_foreach(list, sqr);
 
     if (node != NULL) {
         printf("there is a node with such data\n");

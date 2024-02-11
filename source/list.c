@@ -7,36 +7,85 @@
  */
 struct singly_linked_list_node {
 
-    sNode_t next;
+    sNode_t next;   /**< A pointer to the next node in a singly-linked list */
 
-    void* data;
+    void* data;     /**< Node's data */
 };
 
 /**
+ * The `methods` struct encapsulates all the methods available for a list.
+ * It serves as a container for the function pointers that define the behavior and operations supported by the list,
+ * providing a unified interface to interact with the list's functionality.
  * 
+ * The methods struct is defined as an incomplete data type, 
+ * which means that its function pointers are not specified within the struct definition.
+ * Instead, the function pointers are defined separately in the code where the methods struct is used.
  */
 struct methods {
 
+    /**
+     * \brief Provides a way to free dynamically allocated data when \link sList_destroy \endlink is called.
+     * 
+     * Provides a way to free dynamically allocated data when \link sList_destroy \endlink is called.
+     * For example, if the list contains data dynamically allocated using `malloc`,
+     * destroy should be set to `free` to free the data as the linked list is destroyed. 
+     * For structured data containing several dynamically allocated members, `destroy` should be set to a user-defined function
+     * that calls `free` for each dynamically allocated member as well as for the structure itself.
+     * For a linked list containing data that should not be freed, `destroy` should be set to `NULL`.
+     * 
+     * @param[in] data Node's data
+     * 
+     * \return None
+     */
     void (*destroy)(void* data);
+
+    /**
+     * \brief Provides a way to display Node's data.
+     * 
+     * The `print` method is used to output the data held by each node in the singly-linked list.
+     * It does this by traversing the list and calling the user-defined `print` function for each node's data.
+     * 
+     * @param[in] data Node's data.
+     * 
+     * \return None.
+    */
     void (*print)(void* data);
+
+    /**
+     * \brief Provides a way to compare data stored in a node.
+     * 
+     * The `match` method is a user-defined function that compares the data held by a node with arbitrary data.
+     * 
+     * @param[in] data_1 The data held by the node
+     * @param[in] data_2 The data to be compared with the node's data.
+     * 
+     * \return `0` if the two values are equal, indicating a successful match; any non-zero value if the two values are not equal, indicating a mismatch.
+     */
     int (*match)(void* data_1, void* data_2);
 };
 
 /**
- * 
+ * A singly-linked list data.
  */
 struct data {
-    ssize_t size;
+    ssize_t size;   /**< Number of elements in a singly-linked list */
 
-    sNode_t head;
-    sNode_t tail;
+    sNode_t head;   /**< The first node of the singly-linked list */
+    sNode_t tail;   /**< The last node of the singly-linked list */
 };
 
 /* ================================ */
 
 /**
- * The function allocates memory for a linked list node.
- * If the node's data is NULL, the function execution is discarded.
+ * \brief Creates a new instance of a list node.
+ * 
+ * This function creates a new instance of a list node and initializes its `data`
+ * field with the provided value. If the `data` argument is NULL, the function
+ * will return NULL, indicating an error.
+ * 
+ * @param[in] data A void pointer to the data to be stored in the node.
+ * 
+ * \return A pointer to the newly created node if successful, NULL otherwise.
  */
 static sNode_t Node_new(void* data) {
 
@@ -46,7 +95,7 @@ static sNode_t Node_new(void* data) {
         return NULL;
     }
 
-    if ((node = calloc(1, sizeof(sNode))) == NULL) {
+    if ((node = calloc(1, sizeof(struct singly_linked_list_node))) == NULL) {
         return node;
     }
 
@@ -58,8 +107,17 @@ static sNode_t Node_new(void* data) {
 /* ================================ */
 
 /**
- * The function deallocates memory allocated to fit the list node.
- * Data a node contains is returned, so it's up to the caller to delete it.
+ * \brief Destroys a list node and frees its associated memory.
+ * 
+ * This function deallocates the memory occupied by the provided list node
+ * and calls the user-defined `destroy` function to free the node's data.
+ * 
+ * @param[in] node A pointer to the list node to be destroyed.
+ * 
+ * @remark The `destroy` function should be implemented by the user and will be
+ *         responsible for freeing the memory occupied by the data stored in the
+ * 
+ * \return None.
  */
 static void* Node_destroy(sNode_t* node) {
 
@@ -85,7 +143,7 @@ sList_t sList_new(void (*destroy)(void* data), void (*print)(void* data), int (*
 
     sList_t list = NULL;
 
-    if ((list = calloc(1, sizeof(sList))) == NULL) {
+    if ((list = calloc(1, sizeof(struct singly_linked_list))) == NULL) {
         return NULL;
     }
 
@@ -471,6 +529,29 @@ void sList_print_verbose(const sList_t list) {
     }
 
     return ;
+}
+
+/* ================================================================ */
+
+int sList_foreach(const sList_t list, int (*func)(void* data)) {
+
+    int result = 1;
+
+    sNode_t node = NULL;
+
+    if (list == NULL) {
+        return result;
+    }
+
+    if (func == NULL) {
+        return result;
+    }
+
+    for (node = list->data->head; node != NULL; node = node->next) {
+        func(node->data);
+    }
+
+    return (result = 0);
 }
 
 /* ================================================================ */

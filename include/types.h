@@ -3,15 +3,17 @@
 
 /* ================================================================ */
 
-/* A singly-linked list node */
-typedef struct singly_linked_list_node sNode;
-typedef sNode* sNode_t;
+/**
+ * \brief A pointer to an incomplete data type, allowing user interaction only through a defined interface.
+ */
+typedef struct singly_linked_list_node* sNode_t;
 
 /* ================================ */
 
-/* A singly-linked list*/
-typedef struct singly_linked_list sList;
-typedef sList* sList_t;
+/**
+ * \brief A pointer to an incomplete data type, allowing user interaction only through a defined interface.
+ */
+typedef struct singly_linked_list* sList_t;
 
 /* ================================ */
 
