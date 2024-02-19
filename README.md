@@ -90,9 +90,11 @@ typedef struct {
   char* author;
 } Book;
 
-void Book_destroy(Book* book) {
+void Book_destroy(void* b) {
 
-  if ((book != NULL) && (*book != NULL)) {
+  if ((b != NULL) && (*b != NULL)) {
+    Book* book = (Book*) b;
+
     // call free() on every element that has been dynamically allocated
     free((*book)->title);
     free((*book)->author);
