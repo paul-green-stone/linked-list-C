@@ -271,7 +271,7 @@ ssize_t sList_size(const sList_t list) {
 
 /* ================================ */
 
-extern void sList_print(const sList_t list) {
+extern void sList_print(const sList_t list, const char* d) {
 
     sNode_t node = NULL;
 
@@ -283,18 +283,18 @@ extern void sList_print(const sList_t list) {
         return ;
     }
 
-    printf("[");
+    printf("[\n");
 
     for (node = list->data->head; node != NULL; node = node->next) {
 
         list->methods->print(node->data);
 
         if (node != list->data->tail) {
-            printf(" -> ");
+            printf("%s", (d != NULL) ? d : " -> ");
         }
     }
 
-    printf("]\n");
+    printf("\n]\n");
 
     return ;
 }
@@ -516,17 +516,20 @@ void sList_print_verbose(const sList_t list) {
     for (node = list->data->head; node != NULL; node = node->next) {
 
         printf("[");
-        printf("data: ");
+        printf("current: %p\n", (void*) node);
+        printf(" data: {");
         list->methods->print(node->data);
-        printf("\n");
+        printf("}\n");
 
-        printf("next: %p\n", (void*) node->next);
-        printf("]");
+        printf(" next: %p", (void*) node->next);
+        printf("]\n");
 
         if (node != list->data->tail) {
             printf("\n");
         }
     }
+
+    printf("\n");
 
     return ;
 }

@@ -36,7 +36,7 @@ void Book_print(void* b) {
         Book* book = (Book*) b;
 
         if (book != NULL) {
-            printf("Title: %s\nAuthor: %s\n", book->title, book->author);
+            printf("Title: %s; Author: %s", book->title, book->author);
         }
     }
 
@@ -75,7 +75,7 @@ int main (int argc, char** argv) {
     sList_insert_last(list, Book_new("Martin Eden", "Jack London"));
     sList_insert_last(list, Book_new("1984", "George Orwell"));
 
-    sList_print(list);
+    sList_print(list, NULL);
 
     sList_destroy(&list);
 

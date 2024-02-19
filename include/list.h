@@ -141,10 +141,11 @@ extern ssize_t sList_size(const sList_t list);
  * for every node in the list. The `print` function is responsible for outputting the content of each node.
  *
  * \param[in] list A pointer to the singly-linked list to be printed.
+ * \param[in] d A delimiter to be used when printing the nodes. Defaults to ` -> ` if `NULL` is specified.
  * 
  * \return None.
  */
-extern void sList_print(const sList_t list);
+extern void sList_print(const sList_t list, const char* d);
 
 /* ================================ */
 
