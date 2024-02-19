@@ -220,7 +220,7 @@ void Book_print(void* data) {
    if (data != NULL) {
          book = (Book*) data;
 
-         printf("Title: %s\tAuthor: %s\n, book->title, book->author);
+         printf("Title: %s\tAuthor: %s\n", book->title, book->author);
    }
 }
 
