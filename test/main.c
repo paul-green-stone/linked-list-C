@@ -1,9 +1,44 @@
 #include "../include/sll.h"
+#include <string.h>
 
-void print_int(void* data) {
+typedef struct {
+    char* title;
+    char* author;
+} Book;
 
-    if (data != NULL)
-        printf("%d", *((int*) data));
+Book* Book_new(const char* t, const char* a) {
+    Book* book = calloc(1, sizeof(Book));
+
+    book->title = strdup(t);
+    book->author = strdup(a);
+
+    return book;
+}
+
+void Book_destroy(void* b) {
+    if (b != NULL) {
+        Book* book = (Book*) b;
+
+        if (book != NULL) {
+            free(book->title);
+            free(book->author);
+
+            free(book);
+        }
+    }
+
+    return ;
+}
+
+void Book_print(void* b) {
+
+    if (b != NULL) {
+        Book* book = (Book*) b;
+
+        if (book != NULL) {
+            printf("Title: %s\nAuthor: %s\n", book->title, book->author);
+        }
+    }
 
     return ;
 }
@@ -32,48 +67,13 @@ int main (int argc, char** argv) {
 
     sList_t list = NULL;
 
-    if ((list = sList_new(free, print_int, match_int)) == NULL) {
+    if ((list = sList_new(Book_destroy, Book_print, match_int)) == NULL) {
         printf("%s\n", strerror(errno));
     }
 
-    for (size_t i = 0; i < 100; i++) {
-        
-        int* value = NULL;
-
-        if ((value = malloc(sizeof(int))) != NULL) {
-            *value = rand() % 100;
-        }
-
-        if (i == 3) {
-            *value = 10;
-        }
-
-        sList_insert_last(list, value);
-    }
-
-    printf("List size: %ld\n", sList_size(list));
-
-    sList_print(list);
-
-    int a = 10;
-    sNode_t node = sList_find(list, &a);
-
-    sList_foreach(list, sqr);
-
-    if (node != NULL) {
-        printf("there is a node with such data\n");
-
-        // int* b = malloc(sizeof(int));
-        // *b = 999;
-
-        // sList_insert_before(list, node, b);
-
-        void* data = sList_delete_Node(list, node);
-
-        free(data);
-    }
-
-    printf("List size: %ld\n", sList_size(list));
+    sList_insert_first(list, Book_new("Stuart Little", "E. B White"));
+    sList_insert_last(list, Book_new("Martin Eden", "Jack London"));
+    sList_insert_last(list, Book_new("1984", "George Orwell"));
 
     sList_print(list);
 

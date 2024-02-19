@@ -56,7 +56,7 @@ if (list != NULL) {
   for (size_t i = 0; i < size; i++) {
     int* value = NULL;
 
-    if ((value = malloc(sizeof(int)) != NULL) {
+    if (value = malloc(sizeof(int)) != NULL) {
       *value = i * i;
 
       /*
@@ -91,16 +91,19 @@ typedef struct {
 } Book;
 
 void Book_destroy(void* b) {
+  
+    if (b != NULL) {
+        Book* book = (Book*) b;
 
-  if ((b != NULL) && (*b != NULL)) {
-    Book* book = (Book*) b;
+        if (book != NULL) {
+            free(book->title);
+            free(book->author);
 
-    // call free() on every element that has been dynamically allocated
-    free((*book)->title);
-    free((*book)->author);
+            free(book);
+        }
+    }
 
-    free(*book);
-  }
+    return ;
 }
 
 /* ... */
