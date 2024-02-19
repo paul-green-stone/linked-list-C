@@ -25,7 +25,16 @@
 var NAVTREE =
 [
   [ "Singly-Linked List", "index.html", [
-    [ "linked-list-C", "md_README.html", null ],
+    [ "Singly-linked list 🚋-🚋-🚋", "md_README.html", [
+      [ "✏️ Description", "md_README.html#autotoc_md1", null ],
+      [ "🛠️ Usage", "md_README.html#autotoc_md2", [
+        [ "Initialization", "md_README.html#autotoc_md3", [
+          [ "1️⃣ Static Data", "md_README.html#autotoc_md4", null ],
+          [ "2️⃣ Dynamically Allocated Data", "md_README.html#autotoc_md5", null ],
+          [ "3️⃣ Complex User Data", "md_README.html#autotoc_md6", null ]
+        ] ]
+      ] ]
+    ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],

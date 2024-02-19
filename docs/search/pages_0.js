@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['linked_2dlist_2dc_0',['linked-list-C',['../md_README.html',1,'']]]
+  ['singly_2dlinked_20list_20🚋_2d🚋_2d🚋_0',['Singly-linked list 🚋-🚋-🚋',['../md_README.html',1,'']]]
 ];

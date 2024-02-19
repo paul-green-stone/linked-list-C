@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.7"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Singly-Linked List: linked-list-C</title>
+<title>Singly-Linked List: Singly-linked list 🚋-🚋-🚋</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -89,11 +89,122 @@ $(document).ready(function(){initNavTree('md_README.html',''); initResizable(); 
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">linked-list-C</div></div>
+  <div class="headertitle"><div class="title">Singly-linked list 🚋-🚋-🚋</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md0"></a>A singly-linked list. The simplest linked list, in which elements are linked by a single pointer. This structure allows the list to be traversed from its firt element to its last </p>
-</div></div><!-- contents -->
+<div class="textblock"><p><a class="anchor" id="autotoc_md0"></a> A singly-linked list. The simplest linked list, in which elements are linked by a single pointer. This structure allows the list to be traversed from its first element to its last</p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+✏️ Description</h1>
+<p>The linked list data structure is designed as a pointer to an incomplete type, which prevents direct modification of its elements by accessing the list's items, such as <code>list-&gt;head = node</code>. Users can only access and modify the list through a specified interface, ensuring controlled and secure manipulation of the list's contents. For additional information, refer to the <a href="https://paul-green-stone.github.io/linked-list-C/">documentation</a></p>
+<h1><a class="anchor" id="autotoc_md2"></a>
+🛠️ Usage</h1>
+<h2><a class="anchor" id="autotoc_md3"></a>
+Initialization</h2>
+<p>Before creating a list, it's important to determine the type of data the list will hold. Depending on whether the list contains statically or dynamically allocated data, or any other complex user data, the appropriate destruction or cleanup mechanism should be employed.</p>
+<h3><a class="anchor" id="autotoc_md4"></a>
+1️⃣ Static Data</h3>
+<p>If the list contains statically allocated data, the list should not attempt to destroy it when the list itself is being destroyed:</p>
+<div class="fragment"><div class="line"><span class="comment">/* ... */</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> array[] = {0, 2, 4, 6, 8}; <span class="comment">// Array of statically allocated integers</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_struct" href="structsingly__linked__list.html">sList_t</a> list = <a class="code hl_function" href="list_8h.html#a1fd0b004d7b6b010259323e262eb12ab">sList_new</a>(NULL, how_to_print, how_to_compare);</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordflow">if</span> (list != NULL) {</div>
+<div class="line">  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; <span class="keyword">sizeof</span>(array) / <span class="keyword">sizeof</span>(array[0]); i++) {</div>
+<div class="line">    <span class="comment">/*</span></div>
+<div class="line"><span class="comment">      Even though we store statically-allocated integer variables in the list,</span></div>
+<div class="line"><span class="comment">      what we actually hold are their memory addresses. Consequently,</span></div>
+<div class="line"><span class="comment">      this allows users to alter the value of these integers</span></div>
+<div class="line"><span class="comment">      by directly modifying them through their corresponding array indices</span></div>
+<div class="line"><span class="comment">    */</span></div>
+<div class="line">    <a class="code hl_function" href="list_8h.html#a9dc52f446fcc2b14a17ae40d0dd94451">sList_insert_first</a>(list, &amp;array[i]);</div>
+<div class="line">  }</div>
+<div class="line"> </div>
+<div class="line">  <span class="comment">/* ... */</span></div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_function" href="list_8h.html#ad3ec7793f8a19fdbb6d159bfb6becfc9">sList_destroy</a>(&amp;list); <span class="comment">// It&#39;s save to call it on NULL</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* ... */</span></div>
+<div class="ttc" id="alist_8h_html_a1fd0b004d7b6b010259323e262eb12ab"><div class="ttname"><a href="list_8h.html#a1fd0b004d7b6b010259323e262eb12ab">sList_new</a></div><div class="ttdeci">sList_t sList_new(void(*destroy)(void *data), void(*print)(void *data), int(*match)(void *data_1, void *data_2))</div><div class="ttdoc">Creates a new instance of a singly-linked list.</div><div class="ttdef"><b>Definition</b> list.c:142</div></div>
+<div class="ttc" id="alist_8h_html_a9dc52f446fcc2b14a17ae40d0dd94451"><div class="ttname"><a href="list_8h.html#a9dc52f446fcc2b14a17ae40d0dd94451">sList_insert_first</a></div><div class="ttdeci">int sList_insert_first(const sList_t list, void *data)</div><div class="ttdoc">Inserts a new node with the given data at the beginning of a specified singly-linked list.</div><div class="ttdef"><b>Definition</b> list.c:304</div></div>
+<div class="ttc" id="alist_8h_html_ad3ec7793f8a19fdbb6d159bfb6becfc9"><div class="ttname"><a href="list_8h.html#ad3ec7793f8a19fdbb6d159bfb6becfc9">sList_destroy</a></div><div class="ttdeci">void sList_destroy(sList_t *list)</div><div class="ttdoc">Destroys a singly-linked list and frees its associated memory.</div><div class="ttdef"><b>Definition</b> list.c:167</div></div>
+<div class="ttc" id="astructsingly__linked__list_html"><div class="ttname"><a href="structsingly__linked__list.html">singly_linked_list</a></div><div class="ttdef"><b>Definition</b> list.h:9</div></div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md5"></a>
+2️⃣ Dynamically Allocated Data</h3>
+<p>For dynamically allocated data, users should free the memory by calling <code>free</code> when removing elements from the list to prevent memory leaks:</p>
+<div class="fragment"><div class="line"><span class="comment">/* ... */</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">size_t</span> size = 5;</div>
+<div class="line"><a class="code hl_struct" href="structsingly__linked__list.html">sList_t</a> list = <a class="code hl_function" href="list_8h.html#a1fd0b004d7b6b010259323e262eb12ab">sList_new</a>(free, how_to_print, how_to_compare);</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordflow">if</span> (list != NULL) {</div>
+<div class="line">  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; size; i++) {</div>
+<div class="line">    <span class="keywordtype">int</span>* value = NULL;</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordflow">if</span> (value = malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">int</span>)) != NULL) {</div>
+<div class="line">      *value = i * i;</div>
+<div class="line"> </div>
+<div class="line">      <span class="comment">/*</span></div>
+<div class="line"><span class="comment">        There exists no legal method to modify data residing in the list&#39;s nodes</span></div>
+<div class="line"><span class="comment">        externally beyond its defined interface because the data is located in the</span></div>
+<div class="line"><span class="comment">        heap space, and one must possess a valid pointer to gain access to it.</span></div>
+<div class="line"><span class="comment">        Owing to encapsulation principles, although we may state that the list holds</span></div>
+<div class="line"><span class="comment">        data internally, all intricate implementation aspects remain concealed from</span></div>
+<div class="line"><span class="comment">        our view as external consumers.</span></div>
+<div class="line"><span class="comment">      */</span></div>
+<div class="line">      <a class="code hl_function" href="list_8h.html#a9dc52f446fcc2b14a17ae40d0dd94451">sList_insert_first</a>(list, value);</div>
+<div class="line">    }</div>
+<div class="line">  }</div>
+<div class="line"> </div>
+<div class="line">  <span class="comment">/* ... */</span></div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_function" href="list_8h.html#ad3ec7793f8a19fdbb6d159bfb6becfc9">sList_destroy</a>(&amp;list);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* ... */</span></div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md6"></a>
+3️⃣ Complex User Data</h3>
+<p>In the case of complex user data, a user-defined function should be called to handle data deletions properly, ensuring that any associated resources are released in a controlled manner:</p>
+<div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
+<div class="line">  <span class="comment">// strdup() is used to dynamically duplicate and assign string values to struct members</span></div>
+<div class="line">  <span class="keywordtype">char</span>* title; </div>
+<div class="line">  <span class="keywordtype">char</span>* author;</div>
+<div class="line">} Book;</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">void</span> Book_destroy(<span class="keywordtype">void</span>* b) {</div>
+<div class="line">  </div>
+<div class="line">    <span class="keywordflow">if</span> (b != NULL) {</div>
+<div class="line">        Book* book = (Book*) b;</div>
+<div class="line"> </div>
+<div class="line">        <span class="keywordflow">if</span> (book != NULL) {</div>
+<div class="line">            free(book-&gt;title);</div>
+<div class="line">            free(book-&gt;author);</div>
+<div class="line"> </div>
+<div class="line">            free(book);</div>
+<div class="line">        }</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    return ;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* ... */</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_struct" href="structsingly__linked__list.html">sList_t</a> list = <a class="code hl_function" href="list_8h.html#a1fd0b004d7b6b010259323e262eb12ab">sList_new</a>(Book_destroy, how_to_print, how_to_compare);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Adding books to the list</span></div>
+<div class="line"><span class="keywordflow">if</span> (list != NULL) {</div>
+<div class="line">  <a class="code hl_function" href="list_8h.html#a9dc52f446fcc2b14a17ae40d0dd94451">sList_insert_first</a>(list, Book_new(<span class="stringliteral">&quot;Stuart Little&quot;</span>, <span class="stringliteral">&quot;E. B White&quot;</span>));</div>
+<div class="line">  <a class="code hl_function" href="list_8h.html#a7efd6042859b992f94d3f0ba834d38a0">sList_insert_last</a>(list, Book_new(<span class="stringliteral">&quot;Martin Eden&quot;</span>, <span class="stringliteral">&quot;Jack London&quot;</span>));</div>
+<div class="line">  <a class="code hl_function" href="list_8h.html#a7efd6042859b992f94d3f0ba834d38a0">sList_insert_last</a>(list, Book_new(<span class="stringliteral">&quot;1984&quot;</span>, <span class="stringliteral">&quot;George Orwell&quot;</span>));</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_function" href="list_8h.html#ad3ec7793f8a19fdbb6d159bfb6becfc9">sList_destroy</a>(&amp;list);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* ... */</span></div>
+<div class="ttc" id="alist_8h_html_a7efd6042859b992f94d3f0ba834d38a0"><div class="ttname"><a href="list_8h.html#a7efd6042859b992f94d3f0ba834d38a0">sList_insert_last</a></div><div class="ttdeci">int sList_insert_last(const sList_t list, void *data)</div><div class="ttdoc">Inserts a new node with the given data at the end of a singly-linked list.</div><div class="ttdef"><b>Definition</b> list.c:195</div></div>
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
