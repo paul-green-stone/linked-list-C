@@ -204,6 +204,96 @@ Initialization</h2>
 <div class="line"> </div>
 <div class="line"><span class="comment">/* ... */</span></div>
 <div class="ttc" id="alist_8h_html_a7efd6042859b992f94d3f0ba834d38a0"><div class="ttname"><a href="list_8h.html#a7efd6042859b992f94d3f0ba834d38a0">sList_insert_last</a></div><div class="ttdeci">int sList_insert_last(const sList_t list, void *data)</div><div class="ttdoc">Inserts a new node with the given data at the end of a singly-linked list.</div><div class="ttdef"><b>Definition</b> list.c:195</div></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md7"></a>
+Insertion</h2>
+<p>Data can be inserted in the list in four distinct ways:</p>
+<h3><a class="anchor" id="autotoc_md8"></a>
+1️⃣ &lt;tt&gt;sList_insert_last&lt;/tt&gt;</h3>
+<div class="fragment"><div class="line"><span class="comment">/* ... */</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_function" href="list_8h.html#a7efd6042859b992f94d3f0ba834d38a0">sList_insert_last</a>(list, Book_new(<span class="stringliteral">&quot;1984&quot;</span>, <span class="stringliteral">&quot;George Orwell&quot;</span>)); <span class="comment">// Insert data at the end of the list</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* ... */</span></div>
+</div><!-- fragment --><p>Time complexity of the function is $O(1)$</p>
+<h3><a class="anchor" id="autotoc_md9"></a>
+2️⃣ &lt;tt&gt;sList_insert_first&lt;/tt&gt;</h3>
+<div class="fragment"><div class="line"><span class="comment">/* ... */</span></div>
+<div class="line"> </div>
+<div class="line">  <a class="code hl_function" href="list_8h.html#a9dc52f446fcc2b14a17ae40d0dd94451">sList_insert_first</a>(list, Book_new(<span class="stringliteral">&quot;Stuart Little&quot;</span>, <span class="stringliteral">&quot;E. B White&quot;</span>)); <span class="comment">// Insert data at the beginning of the list</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* ... */</span></div>
+</div><!-- fragment --><p>Time complexity of the function is $O(1)$</p>
+<h3><a class="anchor" id="autotoc_md10"></a>
+3️⃣ &lt;tt&gt;sList_insert_after&lt;/tt&gt;</h3>
+<p>The <code>sList_insert_after</code> function is used to insert a new node with specified data after a given node. The function takes a node as an indicator, specifying the node after which the new node should be inserted.</p>
+<p>The <code>sList_insert_after</code> function operates by using a provided search function, <code>sList_find</code>, to find the specified node in the linked list. Once the node is found, the function then traverses the list to find the appropriate position to insert the new node. This results in two traversals of the list, one in the <code>sList_find</code> function and another in the <code>sList_insert_after</code> function. As a result, the time complexity of the function is $O(n^2)$.</p>
+<div class="fragment"><div class="line"><span class="comment">/* ... */</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> Book_compare(<span class="keywordtype">void</span>* data_1, <span class="keywordtype">void</span>* data_2) {</div>
+<div class="line">   <span class="keywordflow">if</span> ((data_1 == NULL) || (data_2 == NULL)) {</div>
+<div class="line">      <span class="keywordflow">return</span> 1;</div>
+<div class="line">   }</div>
+<div class="line"> </div>
+<div class="line">   Book* book_1 = (Book*) data_1;</div>
+<div class="line">   Book* book_2 = (Book*) data_2;</div>
+<div class="line"> </div>
+<div class="line">   <span class="comment">/*</span></div>
+<div class="line"><span class="comment">      The function should return 0 when two pieces of data are equal. `strcmp` returns 0 on success,</span></div>
+<div class="line"><span class="comment">      and when we combine its result with another successfull `strcmp` call, the 1 will be returned.</span></div>
+<div class="line"><span class="comment">      By definition we need 0, so we negate the result to tell pieces of data are equal.</span></div>
+<div class="line"><span class="comment"></span> </div>
+<div class="line"><span class="comment">      A bit cryptic, feel free to use other methods, just make sure 0 is returned on success.</span></div>
+<div class="line"><span class="comment">   */</span></div>
+<div class="line">   <span class="keywordflow">return</span> !(strcmp(book_1-&gt;title, book_2-&gt;title) == 0) &amp;&amp; (strcpm(book_1-&gt;author, book_2-&gt;author) == 0)</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* ... */</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_struct" href="structsingly__linked__list.html">sList_t</a> list = <a class="code hl_function" href="list_8h.html#a1fd0b004d7b6b010259323e262eb12ab">sList_new</a>(Book_destroy, how_to_print, Book_compare);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* Assume we added a very interesting book in the list */</span></div>
+<div class="line"> </div>
+<div class="line">Book interesting_book = Book_new(<span class="stringliteral">&quot;Basic Gambling Mathematics&quot;</span>, <span class="stringliteral">&quot;Mark Bollman&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* First traversion happens here */</span></div>
+<div class="line"><a class="code hl_struct" href="structsingly__linked__list__node.html">sNode_t</a> node = <a class="code hl_function" href="list_8h.html#a7d17a9a254fb896b0abd95531ec67196">sList_find</a>(list, &amp;interesting_book);</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordflow">if</span> (node != NULL) {</div>
+<div class="line">   <span class="comment">/* Second traversion goes here */</span></div>
+<div class="line">   <a class="code hl_function" href="list_8h.html#a05cc0a719f84c40a88108f9bf23fe925">sList_insert_after</a>(list, node, Book_new(<span class="stringliteral">&quot;How to Be Twice As Smart&quot;</span>, <span class="stringliteral">&quot;Scott Witt&quot;</span>));</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* ... */</span></div>
+<div class="ttc" id="alist_8h_html_a05cc0a719f84c40a88108f9bf23fe925"><div class="ttname"><a href="list_8h.html#a05cc0a719f84c40a88108f9bf23fe925">sList_insert_after</a></div><div class="ttdeci">int sList_insert_after(const sList_t list, const sNode_t node, void *data)</div><div class="ttdoc">Inserts data after the specified node in the given singly-linked list.</div><div class="ttdef"><b>Definition</b> list.c:395</div></div>
+<div class="ttc" id="alist_8h_html_a7d17a9a254fb896b0abd95531ec67196"><div class="ttname"><a href="list_8h.html#a7d17a9a254fb896b0abd95531ec67196">sList_find</a></div><div class="ttdeci">sNode_t sList_find(const sList_t list, void *data)</div><div class="ttdoc">Searches for a node with the given data in the provided singly-linked list.</div><div class="ttdef"><b>Definition</b> list.c:367</div></div>
+<div class="ttc" id="astructsingly__linked__list__node_html"><div class="ttname"><a href="structsingly__linked__list__node.html">singly_linked_list_node</a></div><div class="ttdef"><b>Definition</b> list.c:8</div></div>
+</div><!-- fragment --><p>The current implementation of the <code>sList_insert_after</code> function requires two traversals of the linked list, resulting in a time complexity of $O(n^2)$. However, there is a future plan to implement a workaround in the next major update of the data structure.</p>
+<h3><a class="anchor" id="autotoc_md11"></a>
+⚠️ Warning!</h3>
+<p>It is important to note that even if two linked lists contain nodes with the same data, the nodes themselves belong to different lists. This means that calling the <code>sList_find</code> function on one list and obtaining a node with the given data does not guarantee that data can be inserted into another list using the <code>sList_insert_after</code> function. The node must belong to the same list in order for data to be properly inserted.</p>
+<h3><a class="anchor" id="autotoc_md12"></a>
+4️⃣ &lt;tt&gt;sList_insert_before&lt;/tt&gt;</h3>
+<p>The <code>sList_insert_before</code> function is almost identical to the <code>sList_insert_after</code> function, with the only difference being that the data is inserted before the given node. The same rules and considerations apply to the <code>sList_insert_before</code> function as they do to the <code>sList_insert_after</code> function.</p>
+<h2><a class="anchor" id="autotoc_md13"></a>
+🖼️ Printing</h2>
+<p>The function sList_print is used to output the content of a given list. This function requires the user to provide a function that handles the data stored in each node of the list.</p>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> Book_print(<span class="keywordtype">void</span>* <a class="code hl_struct" href="structdata.html">data</a>) {</div>
+<div class="line"> </div>
+<div class="line">   Book* book = NULL;</div>
+<div class="line"> </div>
+<div class="line">   <span class="keywordflow">if</span> (<a class="code hl_struct" href="structdata.html">data</a> != NULL) {</div>
+<div class="line">         book = (Book*) <a class="code hl_struct" href="structdata.html">data</a>;</div>
+<div class="line"> </div>
+<div class="line">         printf(<span class="stringliteral">&quot;Title: %s\tAuthor: %s\n, book-&gt;title, book-&gt;author);</span></div>
+<div class="line"><span class="stringliteral">   }</span></div>
+<div class="line"><span class="stringliteral">}</span></div>
+<div class="line"><span class="stringliteral"></span> </div>
+<div class="line"><span class="stringliteral">/* ... */</span></div>
+<div class="line"><span class="stringliteral"></span> </div>
+<div class="line"><span class="stringliteral">sList_t list = sList_new(Book_destroy, Book_print, Book_compare);</span></div>
+<div class="line"><span class="stringliteral"></span> </div>
+<div class="line"><span class="stringliteral">sList_print(list);</span></div>
+<div class="ttc" id="astructdata_html"><div class="ttname"><a href="structdata.html">data</a></div><div class="ttdef"><b>Definition</b> list.c:70</div></div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

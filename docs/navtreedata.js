@@ -32,7 +32,15 @@ var NAVTREE =
           [ "1️⃣ Static Data", "md_README.html#autotoc_md4", null ],
           [ "2️⃣ Dynamically Allocated Data", "md_README.html#autotoc_md5", null ],
           [ "3️⃣ Complex User Data", "md_README.html#autotoc_md6", null ]
-        ] ]
+        ] ],
+        [ "Insertion", "md_README.html#autotoc_md7", [
+          [ "1️⃣ <tt>sList_insert_last</tt>", "md_README.html#autotoc_md8", null ],
+          [ "2️⃣ <tt>sList_insert_first</tt>", "md_README.html#autotoc_md9", null ],
+          [ "3️⃣ <tt>sList_insert_after</tt>", "md_README.html#autotoc_md10", null ],
+          [ "⚠️ Warning!", "md_README.html#autotoc_md11", null ],
+          [ "4️⃣ <tt>sList_insert_before</tt>", "md_README.html#autotoc_md12", null ]
+        ] ],
+        [ "🖼️ Printing", "md_README.html#autotoc_md13", null ]
       ] ]
     ] ],
     [ "Classes", "annotated.html", [
