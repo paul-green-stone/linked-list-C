@@ -243,7 +243,7 @@ extern int sList_foreach(const sList_t list, int (*func)(void* data));
 /* ================================================================ */
 
 /**
- * \brief Checks if a given node belongs to a given list
+ * \brief Checks if a given node belongs to a given list.
  * 
  * When data is inserted into a list, a new node is created to store that data.
  * This node is marked with the list it has been added to. 

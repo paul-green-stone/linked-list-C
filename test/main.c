@@ -72,18 +72,29 @@ void print_int(void* data) {
     return ;
 }
 
+/* ================================================================ */
+
 int main (int argc, char** argv) {
 
     srand(time(NULL));
     clock_t start, end;
 
-    sList_t list = NULL;
+    sList_t list1 = NULL;
+    sList_t list2 = NULL;
 
-    if ((list = sList_new(free, print_int, match_int)) == NULL) {
+    /* Creating a list */
+    if ((list1 = sList_new(free, print_int, match_int)) == NULL) {
         printf("%s\n", strerror(errno));
     }
 
-    
+    /* Creating a list */
+    if ((list2 = sList_new(free, print_int, match_int)) == NULL) {
+        printf("%s\n", strerror(errno));
+    }
+
+    /* ================================ */
+    /* Populating a list with values */
+
     for (size_t i = 0; i < 10; i++) {
         int* v = malloc(sizeof(int));
 
@@ -93,30 +104,63 @@ int main (int argc, char** argv) {
             *v = 999;
         }
 
-        sList_insert_first(list, v);
+        sList_insert_first(list1, v);
     }
+
+    for (size_t i = 0; i < 10; i++) {
+        int* v = malloc(sizeof(int));
+
+        *v = rand() % 100;
+
+        if (i == 8) {
+            *v = 999;
+        }
+
+        sList_insert_first(list2, v);
+    }
+
+    /* ================================ */
+    /* Printing the list */
+
+    printf("list1 ");
+    sList_print(list1, ", ");
+    
+    printf("list2 ");
+    sList_print(list2, ", ");
+
+    /* ================================ */
+    /* Test whether a node belongs to the list or not */
 
     int target = 999;
 
-    start = clock();
-    sNode_t node = sList_find(list, &target);
+    int* v = malloc(sizeof(int));
+    *v = 666;
 
-    printf("The given node belongs to list: %s\n", sNode_belongs(node, list) == 0 ? "yes" : "no");
+    sNode_t node = sList_find(list1, &target);
+
+    printf("The given node belongs to list1: %s\n", sNode_belongs(node, list1) == 0 ? "yes" : "no");
+    printf("The given node belongs to list2: %s\n", sNode_belongs(node, list2) == 0 ? "yes" : "no");
+
+    /* There is a node with a value of `999` in the list `list2`, hoewever, it is located in the list `list1`, 
+    so there won't we insertion in the list in the follwoing code. Insertion in the list `list1` takes place */
+    sList_insert_before(list2, node, v);
+    sList_insert_before(list1, node, v);
+
+    /* ================================ */
+    /* Printing the list */
+
+    printf("list1 ");
+    sList_print(list1, ", ");
     
-    if (node != NULL) {
-        int *v = malloc(sizeof(int));
+    printf("list2 ");
+    sList_print(list2, ", ");
 
-        *v = -12;
+    /* ================================ */
+    /* Destroy the list */
+    
+    sList_destroy(&list1);
 
-        sList_insert_after(list, node, v);
-        end = clock();
-
-        printf("Found and inserted in %f seconds\n", ((double) (end - start)) / CLOCKS_PER_SEC);
-    }
-
-    sList_print(list, NULL);
-
-    sList_destroy(&list);
+    sList_destroy(&list2);
 
     return EXIT_SUCCESS;
 }
