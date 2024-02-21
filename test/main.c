@@ -1,5 +1,7 @@
 #include "../include/sll.h"
+
 #include <string.h>
+#include <time.h>
 
 typedef struct {
     char* title;
@@ -61,19 +63,56 @@ int match_int(void* data_1, void* data_2) {
     return !(*((int*) data_1) == *((int*) data_2));
 }
 
+void print_int(void* data) {
+
+    if (data != NULL) {
+        printf("%d", *((int*) data));
+    }
+
+    return ;
+}
+
 int main (int argc, char** argv) {
 
     srand(time(NULL));
+    clock_t start, end;
 
     sList_t list = NULL;
 
-    if ((list = sList_new(Book_destroy, Book_print, match_int)) == NULL) {
+    if ((list = sList_new(free, print_int, match_int)) == NULL) {
         printf("%s\n", strerror(errno));
     }
 
-    sList_insert_first(list, Book_new("Stuart Little", "E. B White"));
-    sList_insert_last(list, Book_new("Martin Eden", "Jack London"));
-    sList_insert_last(list, Book_new("1984", "George Orwell"));
+    
+    for (size_t i = 0; i < 10; i++) {
+        int* v = malloc(sizeof(int));
+
+        *v = rand() % 100;
+
+        if (i == 8) {
+            *v = 999;
+        }
+
+        sList_insert_first(list, v);
+    }
+
+    int target = 999;
+
+    start = clock();
+    sNode_t node = sList_find(list, &target);
+
+    printf("The given node belongs to list: %s\n", sNode_belongs(node, list) == 0 ? "yes" : "no");
+    
+    if (node != NULL) {
+        int *v = malloc(sizeof(int));
+
+        *v = -12;
+
+        sList_insert_after(list, node, v);
+        end = clock();
+
+        printf("Found and inserted in %f seconds\n", ((double) (end - start)) / CLOCKS_PER_SEC);
+    }
 
     sList_print(list, NULL);
 

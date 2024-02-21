@@ -10,6 +10,8 @@ struct singly_linked_list_node {
     sNode_t next;   /**< A pointer to the next node in a singly-linked list */
 
     void* data;     /**< Node's data */
+
+    sList_t list;   /**< The list a node belongs to */
 };
 
 /**
@@ -215,6 +217,8 @@ int sList_insert_last(const sList_t list, void* data) {
 
     list->data->size++;
 
+    node->list = list;
+
     return (result = 0);
 }
 
@@ -324,6 +328,8 @@ int sList_insert_first(const sList_t list, void* data) {
 
     list->data->size++;
 
+    node->list = list;
+
     return (result = 0);
 }
 
@@ -422,6 +428,8 @@ int sList_insert_after(const sList_t list, const sNode_t node, void* data) {
 
     list->data->size++;
 
+    node->list = list;
+
     return (result = 0);
 }
 
@@ -456,6 +464,8 @@ int sList_insert_before(const sList_t list, const sNode_t node, void* data) {
     temp->next = new_node;
 
     list->data->size++;
+
+    node->list = list;
 
     return (result = 0);
 }
@@ -558,3 +568,12 @@ int sList_foreach(const sList_t list, int (*func)(void* data)) {
 }
 
 /* ================================================================ */
+
+int sNode_belongs(const sNode_t node, const sList_t list) {
+
+    if ((node == NULL) || (list == NULL)) {
+        return -1;
+    }
+
+    return !(node->list == list);
+}
