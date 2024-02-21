@@ -30,6 +30,9 @@ endif
 ifeq ($(UNAME_S),Darwin)
 	$(CC) -dynamiclib -o $@.dylib $^ $(LDFLAGS)
 endif
+ifeq ($(WINDOWS),msys)
+    $(CC) --shared -o $@ $^ $(LDFLAGS)
+endif
 
 # List module
 $(OBJDIR)/List.o: $(LIST) $(INCLUDE)
