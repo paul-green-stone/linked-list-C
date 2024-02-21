@@ -26,12 +26,10 @@ all: $(SHARED)
 $(SHARED): $(OBJECTS)
 ifeq ($(UNAME_S),Linux)
 	$(CC) -shared -o $@.so $^ $(LDFLAGS)
-endif
-ifeq ($(UNAME_S),Darwin)
+else ifeq ($(UNAME_S),Darwin)
 	$(CC) -dynamiclib -o $@.dylib $^ $(LDFLAGS)
-endif
-ifeq ($(WINDOWS),msys)
-    $(CC) --shared -o $@ $^ $(LDFLAGS)
+else ifeq ($(WINDOWS),Windows_NT)
+    $(CC) -shared -o $@.dll $^ $(LDFLAGS)
 endif
 
 # List module
