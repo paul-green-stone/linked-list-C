@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['size_0',['size',['../structdata.html#af2778e4f080302b7808f3e432474923b',1,'data']]]
+  ['print_0',['print',['../structmethods.html#a6ad6065c978402c77d133d20d1e0c8ef',1,'methods']]]
 ];

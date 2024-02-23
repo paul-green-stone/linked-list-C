@@ -14,5 +14,6 @@ var list_8h =
     [ "sList_print_verbose", "list_8h.html#acc126f2cee7bc3f2f3095c55f08dd5b0", null ],
     [ "sList_remove_first", "list_8h.html#adab6b9f25f6197402b8061b9d7480bbc", null ],
     [ "sList_remove_last", "list_8h.html#a66d3d3769a13133c26cb1714bb37b4ee", null ],
-    [ "sList_size", "list_8h.html#a577475f8292474ebb4224b85881583fa", null ]
+    [ "sList_size", "list_8h.html#a577475f8292474ebb4224b85881583fa", null ],
+    [ "sNode_belongs", "list_8h.html#aba267e6d2200865a185e033811946210", null ]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['print_0',['print',['../structmethods.html#a6ad6065c978402c77d133d20d1e0c8ef',1,'methods']]]
+  ['next_0',['next',['../structsingly__linked__list__node.html#a2b91a9abe4535ebe392954a5cd03e046',1,'singly_linked_list_node']]]
 ];

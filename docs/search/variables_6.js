@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['tail_0',['tail',['../structdata.html#a08c4f03224e9acdc72c8dc0eaa233020',1,'data']]]
+  ['size_0',['size',['../structdata.html#af2778e4f080302b7808f3e432474923b',1,'data']]]
 ];
