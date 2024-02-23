@@ -10,6 +10,8 @@ struct singly_linked_list_node {
     sNode_t next;   /**< A pointer to the next node in a singly-linked list */
 
     void* data;     /**< Node's data */
+
+    sList_t list;   /**< The list a node belongs to */
 };
 
 /**
@@ -215,6 +217,8 @@ int sList_insert_last(const sList_t list, void* data) {
 
     list->data->size++;
 
+    node->list = list;
+
     return (result = 0);
 }
 
@@ -324,6 +328,8 @@ int sList_insert_first(const sList_t list, void* data) {
 
     list->data->size++;
 
+    node->list = list;
+
     return (result = 0);
 }
 
@@ -395,7 +401,6 @@ sNode_t sList_find(const sList_t list, void* data) {
 int sList_insert_after(const sList_t list, const sNode_t node, void* data) {
 
     sNode_t new_node = NULL;
-    sNode_t temp = NULL;
 
     int result = 1;
 
@@ -407,20 +412,21 @@ int sList_insert_after(const sList_t list, const sNode_t node, void* data) {
         return sList_insert_last(list, data);
     }
 
+    /* The node is simply belongs to another node, so there is no meaning in insertion of a node after "this" node in the given list */
+    if (node->list != list) {
+        return result;
+    }
+
     if ((new_node = Node_new(data)) == NULL) {
         return result;
     }
 
-    for (temp = list->data->head; temp != node && temp != NULL; temp = temp->next) ;
-
-    if (temp == NULL) {
-        return result;
-    }
-
-    new_node->next = temp->next;
-    temp->next = new_node;
+    new_node->next = node->next;
+    node->next = new_node;
 
     list->data->size++;
+
+    new_node->list = list;
 
     return (result = 0);
 }
@@ -442,7 +448,7 @@ int sList_insert_before(const sList_t list, const sNode_t node, void* data) {
         return sList_insert_first(list, data);
     }
 
-    if ((new_node = Node_new(data)) == NULL) {
+    if (node->list != list) {
         return result;
     }
 
@@ -452,10 +458,16 @@ int sList_insert_before(const sList_t list, const sNode_t node, void* data) {
         return result;
     }
 
+    if ((new_node = Node_new(data)) == NULL) {
+        return result;
+    }
+
     new_node->next = temp->next;
     temp->next = new_node;
 
     list->data->size++;
+
+    new_node->list = list;
 
     return (result = 0);
 }
@@ -555,6 +567,17 @@ int sList_foreach(const sList_t list, int (*func)(void* data)) {
     }
 
     return (result = 0);
+}
+
+/* ================================================================ */
+
+int sNode_belongs(const sNode_t node, const sList_t list) {
+
+    if ((node == NULL) || (list == NULL)) {
+        return -1;
+    }
+
+    return !(node->list == list);
 }
 
 /* ================================================================ */

@@ -242,4 +242,20 @@ extern int sList_foreach(const sList_t list, int (*func)(void* data));
 
 /* ================================================================ */
 
+/**
+ * \brief Checks if a given node belongs to a given list.
+ * 
+ * When data is inserted into a list, a new node is created to store that data.
+ * This node is marked with the list it has been added to. 
+ * The marking process involves storing a reference to the list in the node's metadata.
+ * 
+ * \param[in] node The node to check.
+ * \param[in] list The list of nodes to check against.
+ * 
+ * \return Returns 0 if the node belongs to the list, 1 if it does not, and -1 if either the node or the list is `NULL`.
+ */
+extern int sNode_belongs(const sNode_t node, const sList_t list); 
+
+/* ================================================================ */
+
 #endif /* list_h */
