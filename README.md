@@ -210,7 +210,7 @@ The `sList_insert_before` function is almost identical to the `sList_insert_afte
 
 ### 🖼️ Printing
 
-The function sList_print is used to output the content of a given list. This function requires the user to provide a function that handles the data stored in each node of the list.
+The function `sList_print` is used to output the content of a given list. This function requires the user to provide a function that handles the data stored in each node of the list.
 
 ```C
 void Book_print(void* data) {
