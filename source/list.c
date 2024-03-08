@@ -275,7 +275,7 @@ ssize_t sList_size(const sList_t list) {
 
 /* ================================ */
 
-extern void sList_print(const sList_t list, const char* d) {
+void sList_print(const sList_t list, const char* d) {
 
     sNode_t node = NULL;
 
@@ -287,8 +287,6 @@ extern void sList_print(const sList_t list, const char* d) {
         return ;
     }
 
-    printf("[\n");
-
     for (node = list->data->head; node != NULL; node = node->next) {
 
         list->methods->print(node->data);
@@ -298,7 +296,7 @@ extern void sList_print(const sList_t list, const char* d) {
         }
     }
 
-    printf("\n]\n");
+    printf("\n");
 
     return ;
 }

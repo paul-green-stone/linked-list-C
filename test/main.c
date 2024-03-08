@@ -122,10 +122,10 @@ int main (int argc, char** argv) {
     /* ================================ */
     /* Printing the list */
 
-    printf("list1 ");
+    printf("list1: ");
     sList_print(list1, ", ");
     
-    printf("list2 ");
+    printf("list2: ");
     sList_print(list2, ", ");
 
     /* ================================ */
