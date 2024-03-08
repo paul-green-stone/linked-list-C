@@ -276,7 +276,7 @@ Insertion</h2>
 <p>The <code>sList_insert_before</code> function is almost identical to the <code>sList_insert_after</code> function, with the only difference being that the data is inserted before the given node. The same rules and considerations apply to the <code>sList_insert_before</code> function as they do to the <code>sList_insert_after</code> function.</p>
 <h2><a class="anchor" id="autotoc_md13"></a>
 🖼️ Printing</h2>
-<p>The function sList_print is used to output the content of a given list. This function requires the user to provide a function that handles the data stored in each node of the list.</p>
+<p>The function <code>sList_print</code> is used to output the content of a given list. This function requires the user to provide a function that handles the data stored in each node of the list.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> Book_print(<span class="keywordtype">void</span>* <a class="code hl_struct" href="structdata.html">data</a>) {</div>
 <div class="line"> </div>
 <div class="line">   Book* book = NULL;</div>
@@ -284,15 +284,16 @@ Insertion</h2>
 <div class="line">   <span class="keywordflow">if</span> (<a class="code hl_struct" href="structdata.html">data</a> != NULL) {</div>
 <div class="line">         book = (Book*) <a class="code hl_struct" href="structdata.html">data</a>;</div>
 <div class="line"> </div>
-<div class="line">         printf(<span class="stringliteral">&quot;Title: %s\tAuthor: %s\n, book-&gt;title, book-&gt;author);</span></div>
-<div class="line"><span class="stringliteral">   }</span></div>
-<div class="line"><span class="stringliteral">}</span></div>
-<div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">/* ... */</span></div>
-<div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">sList_t list = sList_new(Book_destroy, Book_print, Book_compare);</span></div>
-<div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">sList_print(list);</span></div>
+<div class="line">         printf(<span class="stringliteral">&quot;Title: %s\tAuthor: %s\n&quot;</span>, book-&gt;title, book-&gt;author);</div>
+<div class="line">   }</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* ... */</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_struct" href="structsingly__linked__list.html">sList_t</a> list = <a class="code hl_function" href="list_8h.html#a1fd0b004d7b6b010259323e262eb12ab">sList_new</a>(Book_destroy, Book_print, Book_compare);</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_function" href="list_8h.html#a06d117447e12e111e28264b096ffdc77">sList_print</a>(list);</div>
+<div class="ttc" id="alist_8h_html_a06d117447e12e111e28264b096ffdc77"><div class="ttname"><a href="list_8h.html#a06d117447e12e111e28264b096ffdc77">sList_print</a></div><div class="ttdeci">void sList_print(const sList_t list, const char *d)</div><div class="ttdoc">Outputs the content of a given singly-linked list.</div><div class="ttdef"><b>Definition</b> list.c:278</div></div>
 <div class="ttc" id="astructdata_html"><div class="ttname"><a href="structdata.html">data</a></div><div class="ttdef"><b>Definition</b> list.c:72</div></div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
