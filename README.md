@@ -197,10 +197,9 @@ if (node != NULL) {
 /* ... */
 ```
 
-The current implementation of the `sList_insert_after` function requires two traversals of the linked list, resulting in a time complexity of $O(n^2)$. However, there is a future plan to implement a workaround in the next major update of the data structure.
+Every node contains a reference to the list it belongs to, making insertion after the list (`sList_insert_after`) a linear operation. However, searching for a node still requires traversal.
 
 #### ⚠️ Warning!
-
 
 It is important to note that even if two linked lists contain nodes with the same data, the nodes themselves belong to different lists. This means that calling the `sList_find` function on one list and obtaining a node with the given data does not guarantee that data can be inserted into another list using the `sList_insert_after` function. The node must belong to the same list in order for data to be properly inserted.
 
@@ -230,3 +229,26 @@ sList_t list = sList_new(Book_destroy, Book_print, Book_compare);
 
 sList_print(list);
 ```
+
+### ⛏️ Data Extraction
+
+According to the implementation, a list is a pointer to an incomplete type, which means one cannot directly access its members or its node data. In other words, there is no way to manually set a list size, access the list head element, or retrieve node data manually. However, there are situations where it is necessary to retrieve data stored in the list's nodes for processing. This can be achieved using the `sList_next` function, which, upon invocation, returns the data stored in the next list node. Consider an example:
+
+```C
+/* ... */
+
+/* Imagine our list contains books we added in the previous examples */
+
+size_t size = sList_size(list);
+
+for (size_t i = 0; i < size; i++) {
+
+   Book* book = (Book*) sList_next(list);
+
+   /* Manually changing a book's title */
+   free(book->title);
+   book->title = strdup("Very Interesting Story");
+}
+```
+
+Notice that the `sList_next` function returns node data, not the node itself. You must cast a returned pointer according to the data stored in the node. While working with data in the list, the list itself remains untouched; its internal details are protected/hidden and can be modified only via methods defined here.
