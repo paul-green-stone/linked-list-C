@@ -593,7 +593,9 @@ void* sList_next(const sList_t list) {
     /* The list node whose data was returned by the previous call */
     static sNode_t n = NULL;
 
-    /* */
+    // The first time the function is being called requires us to set up its internals
+    // or
+    // when the new list specified does not match the one specified in the iterator.
     if ((l == NULL) || ((l != list) && (list != NULL))) {
 
         l = list;

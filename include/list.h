@@ -259,7 +259,17 @@ extern int sNode_belongs(const sNode_t node, const sList_t list);
 /* ================================ */
 
 /**
+ * \brief This iterator, when called, returns the data of the next node.
  * 
+ * This iterator, when called, returns the data of the next node.
+ * Upon the initial call, the function necessitates a list for tracking.
+ * Subsequent calls with `NULL` values as a list will utilize the last list provided to the function.
+ * Once the iterator reaches the end of the list,
+ * it will reset its configuration and begin iterating from the start of the list.
+ * 
+ * \param[in] list list to iterate over.
+ * 
+ * \return Returns a pointer to data on success, NULL if the list is not provided (node data can't have `NULL` as its data).
  */
 extern void* sList_next(const sList_t list);
 
