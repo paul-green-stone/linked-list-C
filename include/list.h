@@ -240,7 +240,7 @@ extern void sList_print_verbose(const sList_t list);
  */
 extern int sList_foreach(const sList_t list, int (*func)(void* data));
 
-/* ================================================================ */
+/* ================================ */
 
 /**
  * \brief Checks if a given node belongs to a given list.
@@ -255,6 +255,13 @@ extern int sList_foreach(const sList_t list, int (*func)(void* data));
  * \return Returns 0 if the node belongs to the list, 1 if it does not, and -1 if either the node or the list is `NULL`.
  */
 extern int sNode_belongs(const sNode_t node, const sList_t list); 
+
+/* ================================ */
+
+/**
+ * 
+ */
+extern void* sList_next(const sList_t list);
 
 /* ================================================================ */
 

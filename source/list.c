@@ -581,3 +581,41 @@ int sNode_belongs(const sNode_t node, const sList_t list) {
 }
 
 /* ================================================================ */
+
+void* sList_next(const sList_t list) {
+
+    /* Node data to be returned */
+    void* data = NULL;
+
+    /* List that is being operated on */
+    static sList_t l = NULL;
+
+    /* The list node whose data was returned by the previous call */
+    static sNode_t n = NULL;
+
+    /* */
+    if ((l == NULL) || ((l != list) && (list != NULL))) {
+
+        l = list;
+
+        if (list->data->size > 0) {
+            n = list->data->head;
+        }
+    }
+
+    if (l == NULL) {
+        return NULL;
+    }
+
+    data = n->data;
+
+    n = n->next;
+
+    if (n == NULL) {
+        n = list->data->head;
+    }
+
+    return data;
+}
+
+/* ================================================================ */

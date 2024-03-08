@@ -155,6 +155,17 @@ int main (int argc, char** argv) {
     printf("list2 ");
     sList_print(list2, ", ");
 
+    printf("\n\n\n");
+
+    for(size_t i = 0; i < 100; i++) {
+
+        printf("%d\n", *((int*) sList_next(list2)) );
+    }
+
+    printf("\n%d\n", *((int*) sList_next(NULL)) );
+    printf("\n%d\n", *((int*) sList_next(list1)) );
+    printf("%d\n", *((int*) sList_next(list2)) );
+
     /* ================================ */
     /* Destroy the list */
     
