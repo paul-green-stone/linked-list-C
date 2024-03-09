@@ -548,23 +548,23 @@ void sList_print_verbose(const sList_t list) {
 
 int sList_foreach(const sList_t list, int (*func)(void* data)) {
 
-    int result = 1;
+    int result = 0;
 
     sNode_t node = NULL;
 
     if (list == NULL) {
-        return result;
+        return -1;
     }
 
     if (func == NULL) {
-        return result;
+        return -1;
     }
 
     for (node = list->data->head; node != NULL; node = node->next) {
-        func(node->data);
+        result += func(node->data);
     }
 
-    return (result = 0);
+    return result;
 }
 
 /* ================================================================ */

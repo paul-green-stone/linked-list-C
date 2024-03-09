@@ -3,6 +3,19 @@
 #include <string.h>
 #include <time.h>
 
+int square(void* data) {
+
+    int* n = ((int*) data);
+
+    if (!(*n % 2)) {
+        *n *= *n;
+
+        return 1;
+    }
+
+    return 0;
+}
+
 typedef struct {
     char* title;
     char* author;
@@ -157,14 +170,12 @@ int main (int argc, char** argv) {
 
     printf("\n\n\n");
 
-    for(size_t i = 0; i < 100; i++) {
+    int result = sList_foreach(list1, square);
 
-        printf("%d\n", *((int*) sList_next(list2)) );
-    }
+    printf("list1 ");
+    sList_print(list1, ", ");
 
-    printf("\n%d\n", *((int*) sList_next(NULL)) );
-    printf("\n%d\n", *((int*) sList_next(list1)) );
-    printf("%d\n", *((int*) sList_next(list2)) );
+    printf("%d\n", result);
 
     /* ================================ */
     /* Destroy the list */

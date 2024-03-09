@@ -236,7 +236,8 @@ extern void sList_print_verbose(const sList_t list);
  * \param[in] list A pointer to the singly-linked list to be traversed.
  * \param[in] func A function pointer to the function to be applied to each node's data.
  *
- * \return 0 on success, a non-zero value otherwise.
+ * \return Upon successful execution, the function returns the total number of nodes to which it has been applied;
+ * it returns -1 in case of an error.
  */
 extern int sList_foreach(const sList_t list, int (*func)(void* data));
 
