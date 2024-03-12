@@ -150,12 +150,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a05eac232bff1ac9d290722f082124ff4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="list_8c.html#a05eac232bff1ac9d290722f082124ff4">sList_foreach</a> (const <a class="el" href="types_8h.html#af433d65428f28a851f9176f37cca2893">sList_t</a> list, int(*func)(void *<a class="el" href="structdata.html">data</a>))</td></tr>
 <tr class="memdesc:a05eac232bff1ac9d290722f082124ff4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Traverses the given singly-linked list and applies a specified function to every node's data.  <br /></td></tr>
 <tr class="separator:a05eac232bff1ac9d290722f082124ff4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba267e6d2200865a185e033811946210"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="list_8c.html#aba267e6d2200865a185e033811946210">sNode_belongs</a> (const <a class="el" href="types_8h.html#a740eb84323d3076b1c05a9df1af868da">sNode_t</a> node, const <a class="el" href="types_8h.html#af433d65428f28a851f9176f37cca2893">sList_t</a> list)</td></tr>
-<tr class="memdesc:aba267e6d2200865a185e033811946210"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a given node belongs to a given list.  <br /></td></tr>
-<tr class="separator:aba267e6d2200865a185e033811946210"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab480c58cb036ad0ffd8c944d4f3e8841"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="list_8c.html#ab480c58cb036ad0ffd8c944d4f3e8841">sList_next</a> (const <a class="el" href="types_8h.html#af433d65428f28a851f9176f37cca2893">sList_t</a> list)</td></tr>
-<tr class="memdesc:ab480c58cb036ad0ffd8c944d4f3e8841"><td class="mdescLeft">&#160;</td><td class="mdescRight">This iterator, when called, returns the data of the next node.  <br /></td></tr>
-<tr class="separator:ab480c58cb036ad0ffd8c944d4f3e8841"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="adc8ad09426469a9b38e95368cf185dbb" name="adc8ad09426469a9b38e95368cf185dbb"></a>
@@ -521,34 +515,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab480c58cb036ad0ffd8c944d4f3e8841" name="ab480c58cb036ad0ffd8c944d4f3e8841"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab480c58cb036ad0ffd8c944d4f3e8841">&#9670;&#160;</a></span>sList_next()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void * sList_next </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="types_8h.html#af433d65428f28a851f9176f37cca2893">sList_t</a>&#160;</td>
-          <td class="paramname"><em>list</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This iterator, when called, returns the data of the next node. </p>
-<p>This iterator, when called, returns the data of the next node. Upon the initial call, the function necessitates a list for tracking. Subsequent calls with <code>NULL</code> values as a list will utilize the last list provided to the function. Once the iterator reaches the end of the list, it will reset its configuration and begin iterating from the start of the list.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">list</td><td>list to iterate over.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns a pointer to data on success, NULL if the list is not provided (node data can't have <code>NULL</code> as its data). </dd></dl>
-
-</div>
-</div>
 <a id="a06d117447e12e111e28264b096ffdc77" name="a06d117447e12e111e28264b096ffdc77"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a06d117447e12e111e28264b096ffdc77">&#9670;&#160;</a></span>sList_print()</h2>
 
@@ -699,45 +665,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The size of the list, or -1 otherwise. </dd></dl>
-
-</div>
-</div>
-<a id="aba267e6d2200865a185e033811946210" name="aba267e6d2200865a185e033811946210"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba267e6d2200865a185e033811946210">&#9670;&#160;</a></span>sNode_belongs()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int sNode_belongs </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="types_8h.html#a740eb84323d3076b1c05a9df1af868da">sNode_t</a>&#160;</td>
-          <td class="paramname"><em>node</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="types_8h.html#af433d65428f28a851f9176f37cca2893">sList_t</a>&#160;</td>
-          <td class="paramname"><em>list</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Checks if a given node belongs to a given list. </p>
-<p>When data is inserted into a list, a new node is created to store that data. This node is marked with the list it has been added to. The marking process involves storing a reference to the list in the node's metadata.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">node</td><td>The node to check. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">list</td><td>The list of nodes to check against.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns 0 if the node belongs to the list, 1 if it does not, and -1 if either the node or the list is <code>NULL</code>. </dd></dl>
 
 </div>
 </div>
