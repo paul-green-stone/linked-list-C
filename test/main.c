@@ -2,6 +2,9 @@
 
 #include <string.h>
 #include <time.h>
+#include <assert.h>
+
+#define SIZE 10
 
 int square(void* data) {
 
@@ -60,7 +63,7 @@ void Book_print(void* b) {
 
 int sqr(void* data) {
 
-    int result = 0;
+    int result = 1;
 
     *((int*) data) = *((int*) data) * *((int*) data);
 
@@ -93,96 +96,84 @@ int main (int argc, char** argv) {
     clock_t start, end;
 
     sList_t list1 = NULL;
-    sList_t list2 = NULL;
 
-    /* Creating a list */
-    if ((list1 = sList_new(free, print_int, match_int)) == NULL) {
-        printf("%s\n", strerror(errno));
+    if (sList_new(&list1, NULL, print_int, match_int) != 0) {
+        return EXIT_FAILURE;
     }
 
-    /* Creating a list */
-    if ((list2 = sList_new(free, print_int, match_int)) == NULL) {
-        printf("%s\n", strerror(errno));
+    int* t = NULL;
+
+    int r = sList_insert_first(list1, t);
+
+    if (r) {
+        printf("%d\n", r);
+        sList_error(r);
     }
 
-    /* ================================ */
-    /* Populating a list with values */
+    int values[SIZE];
 
-    for (size_t i = 0; i < 10; i++) {
-        int* v = malloc(sizeof(int));
+    for (size_t i = 0; i < SIZE; i++) {
+        values[i] = rand() % 100;
+    }
 
-        *v = rand() % 100;
+    printf("values: ");
+    for (size_t i = 0; i < SIZE; i++) {
+        printf("%d", values[i]);
 
-        if (i == 8) {
-            *v = 999;
+        if (i != SIZE - 1) {
+            printf(", ");
         }
-
-        sList_insert_first(list1, v);
     }
+    printf("\n");
 
-    for (size_t i = 0; i < 10; i++) {
-        int* v = malloc(sizeof(int));
-
-        *v = rand() % 100;
-
-        if (i == 8) {
-            *v = 999;
+    for(size_t i = 0; i < SIZE; i++) {
+        if (sList_insert_first(list1, &values[i]) != 0) {
+            printf("Something went wrong\n");
         }
-
-        sList_insert_first(list2, v);
     }
 
-    /* ================================ */
-    /* Printing the list */
+    printf("list1:  ");
+    r = sList_print(list1, ", ");
+    if (r != 0) {
+        sList_error(r);
+    }
 
-    printf("list1: ");
-    sList_print(list1, ", ");
-    
-    printf("list2: ");
-    sList_print(list2, ", ");
+    int result = sList_foreach(list1, sqr);
 
-    /* ================================ */
-    /* Test whether a node belongs to the list or not */
+    printf("%lld\n", result);
+    printf("list1:  ");
 
-    int target = 999;
-
-    int* v = malloc(sizeof(int));
-    *v = 666;
-
-    sNode_t node = sList_find(list1, &target);
-
-    printf("The given node belongs to list1: %s\n", sNode_belongs(node, list1) == 0 ? "yes" : "no");
-    printf("The given node belongs to list2: %s\n", sNode_belongs(node, list2) == 0 ? "yes" : "no");
-
-    /* There is a node with a value of `999` in the list `list2`, hoewever, it is located in the list `list1`, 
-    so there won't we insertion in the list in the follwoing code. Insertion in the list `list1` takes place */
-    sList_insert_before(list2, node, v);
-    sList_insert_before(list1, node, v);
-
-    /* ================================ */
-    /* Printing the list */
-
-    printf("list1 ");
-    sList_print(list1, ", ");
-    
-    printf("list2 ");
-    sList_print(list2, ", ");
-
-    printf("\n\n\n");
-
-    int result = sList_foreach(list1, square);
-
-    printf("list1 ");
     sList_print(list1, ", ");
 
-    printf("%d\n", result);
+    void* data = NULL;
 
-    /* ================================ */
-    /* Destroy the list */
-    
+    for (size_t i = 0; i < 5; i++) {
+
+        sList_next(list1, &data);
+
+        *((int*) data) = -1;
+    }
+
+    sList_next(list1, &data);
+
+        *((int*) data) = -1000;
+
+    printf("list1:  ");
+    sList_print(list1, ", ");
+
+    int a = -1000;
+    sNode_t n = NULL;
+    sList_find(list1, &a, &n);
+
+    a = 21242135;
+
+    sList_insert_after(list1, n, &a);
+
+    sList_print(list1, NULL);
+
     sList_destroy(&list1);
 
-    sList_destroy(&list2);
+    assert(list1 == NULL);
 
     return EXIT_SUCCESS;
 }

@@ -21,9 +21,10 @@ If the list contains statically allocated data, the list should not attempt to d
  
 int array[] = {0, 2, 4, 6, 8}; // Array of statically allocated integers
 
-sList_t list = sList_new(NULL, how_to_print, how_to_compare);
+sList_t list = NULL;
+int result = sList_new(&list, NULL, how_to_print, how_to_compare);
 
-if (list != NULL) {
+if (result == 0) {
   for (size_t i = 0; i < sizeof(array) / sizeof(array[0]); i++) {
     /*
       Even though we store statically-allocated integer variables in the list,
@@ -50,9 +51,11 @@ For dynamically allocated data, users should free the memory by calling `free` w
 /* ... */
 
 size_t size = 5;
-sList_t list = sList_new(free, how_to_print, how_to_compare);
 
-if (list != NULL) {
+sList_t list = NULL;
+int result = sList_new(&list, free, how_to_print, how_to_compare);
+
+if (result == 0) {
   for (size_t i = 0; i < size; i++) {
     int* value = NULL;
 
@@ -108,13 +111,16 @@ void Book_destroy(void* b) {
 
 /* ... */
 
-sList_t list = sList_new(Book_destroy, how_to_print, how_to_compare);
+sList_t list = NULL;
+int result = sList_new(&list, Book_destroy, how_to_print, how_to_compare);
 
 // Adding books to the list
-if (list != NULL) {
-  sList_insert_first(list, Book_new("Stuart Little", "E. B White"));
-  sList_insert_last(list, Book_new("Martin Eden", "Jack London"));
-  sList_insert_last(list, Book_new("1984", "George Orwell"));
+if (result == 0) {
+
+   /* Let's say we have a function for creating a book that RETURNS a book on success */
+   sList_insert_first(list, Book_new("Stuart Little", "E. B White"));
+   sList_insert_last(list, Book_new("Martin Eden", "Jack London"));
+   sList_insert_last(list, Book_new("1984", "George Orwell"));
 }
 
 sList_destroy(&list);
@@ -131,6 +137,7 @@ Data can be inserted in the list in four distinct ways:
 ```C
 /* ... */
 
+/* The same hypothetical function for book creation */
 sList_insert_last(list, Book_new("1984", "George Orwell")); // Insert data at the end of the list
 
 /* ... */
@@ -155,7 +162,7 @@ Time complexity of the function is $O(1)$
 
 The `sList_insert_after` function is used to insert a new node with specified data after a given node. The function takes a node as an indicator, specifying the node after which the new node should be inserted.
 
-The `sList_insert_after` function operates by using a provided search function, `sList_find`, to find the specified node in the linked list. Once the node is found, the function then traverses the list to find the appropriate position to insert the new node. This results in two traversals of the list, one in the `sList_find` function and another in the `sList_insert_after` function. As a result, the time complexity of the function is $O(n^2)$.
+The `sList_insert_after` function operates by using a provided search function, `sList_find`, to find the specified node in the linked list. Once the node is found, the function then traverses the list to find the appropriate position to insert the new node. 
 
 ```C
 /* ... */
@@ -172,32 +179,31 @@ int Book_compare(void* data_1, void* data_2) {
       The function should return 0 when two pieces of data are equal. `strcmp` returns 0 on success,
       and when we combine its result with another successfull `strcmp` call, the 1 will be returned.
       By definition we need 0, so we negate the result to tell pieces of data are equal.
-
-      A bit cryptic, feel free to use other methods, just make sure 0 is returned on success.
    */
    return !(strcmp(book_1->title, book_2->title) == 0) && (strcpm(book_1->author, book_2->author) == 0)
 }
 
 /* ... */
 
-sList_t list = sList_new(Book_destroy, how_to_print, Book_compare);
+sList_t list = NULL;
+int result = sList_new(&list, Book_destroy, how_to_print, Book_compare);
 
 /* Assume we added a very interesting book in the list */
-
 Book interesting_book = Book_new("Basic Gambling Mathematics", "Mark Bollman");
 
 /* First traversion happens here */
-sNode_t node = sList_find(list, &interesting_book);
+sNode_t node = NULL;
+result = sList_find(list, &interesting_book, &node);
 
-if (node != NULL) {
-   /* Second traversion goes here */
-   sList_insert_after(list, node, Book_new("How to Be Twice As Smart", "Scott Witt"));
+if (result == 0) { 
+   /* If the node is in the list, the operation is linear */
+   result = sList_insert_after(list, node, Book_new("How to Be Twice As Smart", "Scott Witt"));
 }
 
 /* ... */
 ```
 
-Every node contains a reference to the list it belongs to, making insertion after the list (`sList_insert_after`) a linear operation. However, searching for a node still requires traversal.
+Every node contains a reference to the list it belongs to, making insertion after the node (`sList_insert_after`) a linear operation. However, searching for a node with specified data still requires traversal.
 
 #### ⚠️ Warning!
 
@@ -205,7 +211,7 @@ It is important to note that even if two linked lists contain nodes with the sam
 
 #### 4️⃣ `sList_insert_before`
 
-The `sList_insert_before` function is almost identical to the `sList_insert_after` function, with the only difference being that the data is inserted before the given node. The same rules and considerations apply to the `sList_insert_before` function as they do to the `sList_insert_after` function.
+The `sList_insert_before` function is almost identical to the `sList_insert_after` function, with the only difference being that the data is inserted before the given node. The same rules and considerations apply to the `sList_insert_before` function as they do to the `sList_insert_after` function, except it traverses the list in order to find a proper position to insert a node.
 
 ### 🖼️ Printing
 
@@ -225,14 +231,15 @@ void Book_print(void* data) {
 
 /* ... */
 
-sList_t list = sList_new(Book_destroy, Book_print, Book_compare);
+sList_t list = NULL;
+int result = sList_new(&list, Book_destroy, Book_print, Book_compare);
 
 sList_print(list);
 ```
 
 ### ⛏️ Data Extraction
 
-According to the implementation, a list is a pointer to an incomplete type, which means one cannot directly access its members or its node data. In other words, there is no way to manually set a list size, access the list head element, or retrieve node data manually. However, there are situations where it is necessary to retrieve data stored in the list's nodes for processing. This can be achieved using the `sList_next` function, which, upon invocation, returns the data stored in the next list node. Consider an example:
+According to the implementation, a list is a pointer to an incomplete type, which means one cannot directly access its members or its node data. In other words, there is no way to manually set a list size, access the list head element, or retrieve node data manually. However, there are situations where it is necessary to retrieve data stored in the list's nodes for processing. This can be achieved using the `sList_next` function, which, upon invocation, gets the data stored in the next list node. Consider an example:
 
 ```C
 /* ... */
@@ -243,7 +250,13 @@ size_t size = sList_size(list);
 
 for (size_t i = 0; i < size; i++) {
 
-   Book* book = (Book*) sList_next(list);
+   void* data = NULL;
+   Book* book = NULL;
+
+   /* Get data from the next node and store it in `data` */
+   sList_next(list, &data);
+
+   book = (Book*) data;
 
    /* Manually changing a book's title */
    free(book->title);
@@ -251,4 +264,27 @@ for (size_t i = 0; i < size; i++) {
 }
 ```
 
-Notice that the `sList_next` function returns node data, not the node itself. You must cast a returned pointer according to the data stored in the node. While working with data in the list, the list itself remains untouched; its internal details are protected/hidden and can be modified only via methods defined here.
+Notice that the `sList_next` function stores data in the generic `void*` pointer. You must cast this pointer according to whatever your list contains. While working with data in the list, the list itself remains untouched; its internal details are protected/hidden and can be modified only via methods defined here.
+
+### 🏥 Error Handling
+
+There are times when a function fails, and one needs to find out what exactly happened. For such cases, there is a function named `sList_error` that takes a value returned from one of the functions in the `sList_` family and prints the meaningful message, I believe it is meaningful 😄. Let's consider the example below:
+
+```C
+/* ... */
+
+int* a = NULL;
+
+/* Let's say you want to store an integer value in the list but forgot to allocate memory for it */
+int result = sList_insert_last(&list, a);
+
+if (result != 0) {
+
+   /*
+      The message will tell you that there is no possibility to insert `NULL` in the list.
+      Even though you DID allocate memory for an integer but forgot to check it against `NULL`, the
+      function will still inform you that the insertion of `NULL` is not permitted
+   */
+   sList_error(result);
+}
+```

@@ -86,24 +86,27 @@ struct data {
  * will return NULL, indicating an error.
  * 
  * @param[in] data A void pointer to the data to be stored in the node.
+ * @param[out] node A pointer that the function writes into.
  * 
- * \return A pointer to the newly created node if successful, NULL otherwise.
+ * \return 0 on success, a non-zero value otherwise.
  */
-static sNode_t Node_new(void* data) {
+static int Node_new(void* data, sNode_t* node) {
 
-    sNode_t node = NULL;
+    sNode_t n = NULL;
 
     if (data == NULL) {
-        return NULL;
+        return E_NULL_V;
     }
 
-    if ((node = calloc(1, sizeof(struct singly_linked_list_node))) == NULL) {
-        return node;
+    if ((n = calloc(1, sizeof(struct singly_linked_list_node))) == NULL) {
+        return E_NOMEM;
     }
 
-    node->data = data;
+    n->data = data;
 
-    return node;
+    *node = n;
+
+    return E_OK;
 }
 
 /* ================================ */
@@ -119,64 +122,66 @@ static sNode_t Node_new(void* data) {
  * @remark The `destroy` function should be implemented by the user and will be
  *         responsible for freeing the memory occupied by the data stored in the
  * 
- * \return None.
+ * \return 0 on success, a non-zero value otherwise.
  */
-static void* Node_destroy(sNode_t* node) {
-
-    void* data = NULL;
+static int Node_destroy(sNode_t* node, void** data) {
 
     if ((node == NULL) || (*node == NULL)) {
-        return data;
+        return E_NULL_V;
     }
 
-    data = (*node)->data;
+    *data = (*node)->data;
     
     free(*node);
 
     /* Upon return the node is NULL */
     *node = NULL;
 
-    return data;
+    return E_OK;
 }
 
 /* ================================================================ */
 
-sList_t sList_new(void (*destroy)(void* data), void (*print)(void* data), int (*match)(void* data_1, void* data_2)) {
+int sList_new(sList_t* list, void (*destroy)(void* data), void (*print)(void* data), int (*match)(void* data_1, void* data_2)) {
 
-    sList_t list = NULL;
-
-    if ((list = calloc(1, sizeof(struct singly_linked_list))) == NULL) {
-        return NULL;
+    if ((*list = calloc(1, sizeof(struct singly_linked_list))) == NULL) {
+        return E_NOMEM;
     }
 
-    if ((list->methods = calloc(1, sizeof(struct methods))) == NULL) {
-        sList_destroy(&list);
+    if (((*list)->methods = calloc(1, sizeof(struct methods))) == NULL) {
+        sList_destroy(list);
+
+        return E_NOMEM;
     }
 
-    if ((list->data = calloc(1, sizeof (struct data))) == NULL) {
-        sList_destroy(&list);
+    if (((*list)->data = calloc(1, sizeof (struct data))) == NULL) {
+        sList_destroy(list);
+
+        return E_NOMEM;
     }
 
-    list->methods->destroy = destroy;
-    list->methods->print = print;
-    list->methods->match = match;
+    (*list)->methods->destroy = destroy;
+    (*list)->methods->print = print;
+    (*list)->methods->match = match;
 
-    return list;
+    return E_OK;
 }
 
 /* ================================ */
 
-void sList_destroy(sList_t* list) {
+int sList_destroy(sList_t* list) {
+
+    int result = E_OK;
 
     void* data = NULL;
 
     if ((list == NULL) || (*list == NULL)) {
-        return ;
+        return E_NULL_V;
     }
 
     while ((*list)->data->size > 0) {
 
-        data = sList_remove_first(*list);
+        result = sList_remove_first(*list, &data);
 
         if ((*list)->methods->destroy != NULL) {
             (*list)->methods->destroy(data);
@@ -189,21 +194,21 @@ void sList_destroy(sList_t* list) {
 
     *list = NULL;
 
-    return ;
+    return result;
 }
 
 /* ================================ */
 
 int sList_insert_last(const sList_t list, void* data) {
 
-    int result = 1;
+    int result = E_OK;
     sNode_t node = NULL;
 
     if (list == NULL) {
-        return result;
+        return E_NULL_V;
     }
 
-    if ((node = Node_new(data)) == NULL) {
+    if ((result = Node_new(data, &node)) != E_OK) {
         return result;
     }
 
@@ -219,32 +224,33 @@ int sList_insert_last(const sList_t list, void* data) {
 
     node->list = list;
 
-    return (result = 0);
+    return result;
 }
 
 /* ================================ */
 
-void* sList_remove_last(const sList_t list) {
+int sList_remove_last(const sList_t list, void** data) {
+
+    int result = E_OK;
 
     ssize_t size;
 
-    void* data = NULL;
     sNode_t node = NULL;
     sNode_t temp = NULL;
 
     if (list == NULL) {
-        return data;
+        return E_NULL_V;
     }
 
     size = list->data->size;
 
     if (size > 0) {
 
-        data = list->data->tail->data;
+        *data = list->data->tail->data;
         node = list->data->tail;
 
         if (size == 1) {
-            list->data->head = list->data->tail = NULL;
+            list->data->head = (list->data->tail = NULL);
         }
         else {
 
@@ -254,12 +260,12 @@ void* sList_remove_last(const sList_t list) {
             list->data->tail->next = NULL;
         }
 
-        Node_destroy(&node);
+        result = Node_destroy(&node, data);
 
         list->data->size--;
     }
 
-    return data;
+    return result;
 }
 
 /* ================================ */
@@ -267,7 +273,7 @@ void* sList_remove_last(const sList_t list) {
 ssize_t sList_size(const sList_t list) {
 
     if (list == NULL) {
-        return -1;
+        return -E_NULL_V;
     }
 
     return list->data->size;
@@ -275,16 +281,17 @@ ssize_t sList_size(const sList_t list) {
 
 /* ================================ */
 
-void sList_print(const sList_t list, const char* d) {
+int sList_print(const sList_t list, const char* delimiter) {
 
     sNode_t node = NULL;
 
     if (list == NULL) {
-        return ;
+        return E_NULL_V;
     }
 
+    /* The absence of a print method is not an error */
     if (list->methods->print == NULL) {
-        return ;
+        return E_MISMET;
     }
 
     for (node = list->data->head; node != NULL; node = node->next) {
@@ -292,27 +299,27 @@ void sList_print(const sList_t list, const char* d) {
         list->methods->print(node->data);
 
         if (node != list->data->tail) {
-            printf("%s", (d != NULL) ? d : " -> ");
+            printf("%s", (delimiter != NULL) ? delimiter : " -> ");
         }
     }
 
     printf("\n");
 
-    return ;
+    return 0;
 }
 
 /* ================================ */
 
 int sList_insert_first(const sList_t list, void* data) {
 
-    int result = 1;
+    int result = E_OK;
     sNode_t node = NULL;
 
     if (list == NULL) {
-        return result;
+        return E_NULL_V;
     }
 
-    if ((node = Node_new(data)) == NULL) {
+    if ((result = Node_new(data, &node)) != E_OK) {
         return result;
     }
 
@@ -328,27 +335,28 @@ int sList_insert_first(const sList_t list, void* data) {
 
     node->list = list;
 
-    return (result = 0);
+    return result;
 }
 
 /* ================================ */
 
-void* sList_remove_first(const sList_t list) {
+int sList_remove_first(const sList_t list, void** data) {
+
+    int result = E_OK;
 
     ssize_t size = 0;
 
-    void* data = NULL;
     sNode_t node = NULL;
 
     if (list == NULL) {
-        return data;
+        return E_NULL_V;
     }
 
     size = list->data->size;
 
     if (size > 0) {
 
-        data = list->data->head->data;
+        *data = list->data->head->data;
         node = list->data->head;
 
         if (size == 1) {
@@ -358,40 +366,45 @@ void* sList_remove_first(const sList_t list) {
             list->data->head = list->data->head->next;
         }
 
-        Node_destroy(&node);
+        result = Node_destroy(&node, data);
 
         list->data->size--;
     }
 
-    return data;
+    return result;
 }
 
 /* ================================ */
 
-sNode_t sList_find(const sList_t list, void* data) {
+int sList_find(const sList_t list, void* data, sNode_t* node) {
+
+    int result = E_OK;
 
     sNode_t temp = NULL;
 
     if (list == NULL) {
-        return temp;
+        return E_OK;
     }
 
     if (list->methods->match == NULL) {
-        return temp;
+        return E_MISMET;
     }
 
     if (data == NULL) {
-        return temp;
+        return E_NULL_V;
     }
 
     for (temp = list->data->head; temp != NULL; temp = temp->next) {
 
         if (list->methods->match(temp->data, data) == 0) {
-            return temp;
+
+            *node = temp;
+
+            return result;
         }
     }
 
-    return temp;
+    return result;
 }
 
 /* ================================ */
@@ -400,10 +413,10 @@ int sList_insert_after(const sList_t list, const sNode_t node, void* data) {
 
     sNode_t new_node = NULL;
 
-    int result = 1;
+    int result = 0;
 
     if (list == NULL) {
-        return result;
+        return E_NULL_V;
     }
 
     if ((node == NULL) || (node == list->data->tail)) {
@@ -412,10 +425,10 @@ int sList_insert_after(const sList_t list, const sNode_t node, void* data) {
 
     /* The node is simply belongs to another node, so there is no meaning in insertion of a node after "this" node in the given list */
     if (node->list != list) {
-        return result;
+        return E_MATCH;
     }
 
-    if ((new_node = Node_new(data)) == NULL) {
+    if ((result = Node_new(data, &new_node)) != 0) {
         return result;
     }
 
@@ -426,7 +439,7 @@ int sList_insert_after(const sList_t list, const sNode_t node, void* data) {
 
     new_node->list = list;
 
-    return (result = 0);
+    return E_OK;
 }
 
 /* ================================ */
@@ -436,10 +449,10 @@ int sList_insert_before(const sList_t list, const sNode_t node, void* data) {
     sNode_t new_node = NULL;
     sNode_t temp = NULL;
 
-    int result = 1;
+    int result = E_OK;
 
     if (list == NULL) {
-        return result;
+        return E_NULL_V;
     }
 
     if ((node == NULL) || (node == list->data->head)) {
@@ -447,16 +460,12 @@ int sList_insert_before(const sList_t list, const sNode_t node, void* data) {
     }
 
     if (node->list != list) {
-        return result;
+        return E_MISMET;
     }
 
     for (temp = list->data->head; temp->next != node && temp != NULL; temp = temp->next) ;
 
-    if (temp == NULL) {
-        return result;
-    }
-
-    if ((new_node = Node_new(data)) == NULL) {
+    if ((result = Node_new(data, &new_node)) != 0) {
         return result;
     }
 
@@ -467,60 +476,60 @@ int sList_insert_before(const sList_t list, const sNode_t node, void* data) {
 
     new_node->list = list;
 
-    return (result = 0);
+    return result;
 }
 
 /* ================================ */
 
-void* sList_delete_Node(const sList_t list, sNode_t node) {
+int sList_delete_Node(const sList_t list, sNode_t node, void** data) {
+
+    int result = E_OK;
 
     sNode_t temp = NULL;
 
-    void* data = NULL;
-
     if (list == NULL) {
-        return data;
+        return E_NULL_V;
     }
 
     if (node == NULL) {
-        return data;
+        return E_NULL_V;
     }
 
     if (node == list->data->head) {
-        return sList_remove_first(list);
+        return sList_remove_first(list, data);
     }
 
     if (node == list->data->tail) {
-        return sList_remove_last(list);
+        return sList_remove_last(list, data);
+    }
+
+    if (node->list != list) {
+        return E_MATCH;
     }
 
     for (temp = list->data->head; temp->next != node && temp != NULL; temp = temp->next) ;
 
-    if (temp == NULL) {
-        return data;
-    }
-
     temp->next = node->next;
 
-    data = Node_destroy(&node);
+    result = Node_destroy(&node, data);
 
     list->data->size--;
 
-    return data;
+    return result;
 }
 
 /* ================================ */
 
-void sList_print_verbose(const sList_t list) {
+int sList_print_verbose(const sList_t list) {
 
     sNode_t node = NULL;
 
     if (list == NULL) {
-        return ;
+        return -E_NULL_V;
     }
 
     if (list->methods->print == NULL) {
-        return ;
+        return E_MISMET;
     }
 
     for (node = list->data->head; node != NULL; node = node->next) {
@@ -541,23 +550,23 @@ void sList_print_verbose(const sList_t list) {
 
     printf("\n");
 
-    return ;
+    return E_OK;
 }
 
-/* ================================================================ */
+/* ================================ */
 
 int sList_foreach(const sList_t list, int (*func)(void* data)) {
 
-    int result = 0;
+    int result = E_OK;
 
     sNode_t node = NULL;
 
     if (list == NULL) {
-        return -1;
+        return E_NULL_V;
     }
 
     if (func == NULL) {
-        return -1;
+        return E_NULL_V;
     }
 
     for (node = list->data->head; node != NULL; node = node->next) {
@@ -567,23 +576,20 @@ int sList_foreach(const sList_t list, int (*func)(void* data)) {
     return result;
 }
 
-/* ================================================================ */
+/* ================================ */
 
 int sNode_belongs(const sNode_t node, const sList_t list) {
 
     if ((node == NULL) || (list == NULL)) {
-        return -1;
+        return E_NULL_V;
     }
 
     return !(node->list == list);
 }
 
-/* ================================================================ */
+/* ================================ */
 
-void* sList_next(const sList_t list) {
-
-    /* Node data to be returned */
-    void* data = NULL;
+int sList_next(const sList_t list, void** data) {
 
     /* List that is being operated on */
     static sList_t l = NULL;
@@ -604,10 +610,10 @@ void* sList_next(const sList_t list) {
     }
 
     if (l == NULL) {
-        return NULL;
+        return E_NULL_V;
     }
 
-    data = n->data;
+    *data = n->data;
 
     n = n->next;
 
@@ -615,7 +621,27 @@ void* sList_next(const sList_t list) {
         n = list->data->head;
     }
 
-    return data;
+    return E_OK;
+}
+
+/* ================================ */
+
+void sList_error(int code) {
+
+    struct error {
+        int code;
+        char* msg;
+    } errors[] = {
+        {E_OK, "\033[0;32mSuccess\033[0;37m"},
+        {E_NULL_V, "\033[0;35mWarning\033[0;37m: NULL value provided"},
+        {E_NOMEM, "\033[0;31mError\033[0;37m: Out of memory"},
+        {E_MISMET, "\033[0;35mWarning\033[0;37m: List method is missing"},
+        {E_MATCH, "Foreign node"}
+    };
+
+    fprintf(stderr, "%s\n", errors[code].msg);
+
+    return ;
 }
 
 /* ================================================================ */
